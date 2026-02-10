@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Playground - あんちょこツール</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #FAFAFA;
+      color: #1F2937;
+      line-height: 1.6;
+    }
+
+    .header {
+      background: white;
+      border-bottom: 1px solid #E5E7EB;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      color: #6B7280;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      padding: 16px;
+      height: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: #1F2937;
+    }
+
+    .card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-footer {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid #F3F4F6;
+    }
+
+    .card-tip {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: #9CA3AF;
+      line-height: 1.4;
+    }
+
+    /* Color Picker */
+    #colorPicker {
+      width: 80px;
+      height: 80px;
+      border: 2px solid #E5E7EB;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .color-code {
+      text-align: center;
+    }
+
+    .color-code-label {
+      font-family: monospace;
+      font-size: 10px;
+      color: #6B7280;
+    }
+
+    .color-code-value {
+      font-family: monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1F2937;
+    }
+
+    /* Border Radius */
+    #roundPreview {
+      width: 96px;
+      height: 96px;
+      background: #3B82F6;
+    }
+
+    /* Spacing */
+    #spacingPreview {
+      height: 64px;
+      background: #BFDBFE;
+      transition: width 0.2s;
+    }
+
+    /* Shadow */
+    #shadowPreview {
+      width: 80px;
+      height: 80px;
+      background: white;
+      border: 1px solid #E5E7EB;
+    }
+
+    .shadow-controls {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .shadow-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .shadow-control label {
+      font-size: 10px;
+      color: #9CA3AF;
+      width: 32px;
+    }
+
+    .shadow-control input[type="range"] {
+      flex: 1;
+      height: 4px;
+    }
+
+    .shadow-control span {
+      font-family: monospace;
+      font-size: 10px;
+      color: #6B7280;
+      width: 24px;
+      text-align: right;
+    }
+
+    /* Font Size */
+    #fontPreview {
+      font-weight: 600;
+      color: #1F2937;
+      transition: font-size 0.2s;
+    }
+
+    /* Line Height */
+    #linePreview {
+      font-size: 12px;
+      color: #6B7280;
+      text-align: center;
+      padding: 0 8px;
+      transition: line-height 0.2s;
+    }
+
+    /* Contrast */
+    .contrast-examples {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .contrast-example {
+      padding: 8px;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    /* Button Sizes */
+    .button-examples {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .btn-example {
+      background: #3B82F6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+
+    .btn-medium {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+
+    .btn-large {
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+    }
+
+    /* Sliders and Inputs */
+    input[type="range"] {
+      width: 100%;
+      cursor: pointer;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #E5E7EB;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    .value-display {
+      font-family: monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1F2937;
+    }
+
+    /* Ad Banner */
+    .ad-banner {
+      background: #F9FAFB;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 32px 0;
+    }
+
+    .ad-banner span {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      color: #9CA3AF;
+    }
+
+    /* Box Visualizer */
+    .box-visualizer {
+      background: white;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .box-visualizer-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .box-visualizer h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .box-visualizer-subtitle {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      color: #9CA3AF;
+      margin-left: 8px;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .control-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: #6B7280;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .input-field label {
+      font-size: 10px;
+      color: #9CA3AF;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .content-size-box {
+      background: #F9FAFB;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .content-size-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: #6B7280;
+      margin-bottom: 8px;
+    }
+
+    .content-size-values {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    .content-size-values span:first-child {
+      color: #9CA3AF;
+    }
+
+    .content-size-values span:last-child {
+      font-weight: 700;
+      color: #1F2937;
+    }
+
+    /* Visual Preview */
+    .visual-preview {
+      border: 2px dashed #E5E7EB;
+      border-radius: 8px;
+      padding: 32px;
+      background: #FAFAFA;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+    }
+
+    .box-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .margin-layer {
+      position: absolute;
+      background: #E5E7EB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .margin-label {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      font-family: monospace;
+      font-size: 10px;
+      color: #6B7280;
+    }
+
+    .padding-layer {
+      background: #BFDBFE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .padding-label {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      font-family: monospace;
+      font-size: 10px;
+      color: #1E40AF;
+    }
+
+    .content-layer {
+      background: white;
+      border: 1px solid #93C5FD;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .content-label {
+      font-family: monospace;
+      font-size: 12px;
+      color: #6B7280;
+    }
+
+    .box-tips {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid #F3F4F6;
+    }
+
+    .box-tips p {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: #9CA3AF;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      background: white;
+      border-top: 1px solid #E5E7EB;
+      margin-top: 64px;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .footer p {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      color: #9CA3AF;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .box-visualizer {
+        display: none;
+      }
+
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>Design Playground</h1>
+                <div class="brand-text">
+                    <p class="brand-by">by <span class="eri-tools">Eri Tools</span></p>
+                </div>
+                <br>
+      <p>あんちょこツール for デザイン作業</p>
+<!-- 
+<a href="https://buymeacoffee.com/eriaidesign" target="_blank" rel="noopener" class="bmac-btn" style="
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:8px;
+    padding:6px 10px;
+    background:#FFDD00;
+    color:#000;
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    font-weight:700;
+    border-radius:6px;
+    text-decoration:none;
+">
+  ☕ Buy me a coffee
+</a>    
+ -->
+ </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    <!-- Small Cards Grid -->
+    <div class="cards-grid">
+      <!-- Color Picker Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">COLOR</div>
+        </div>
+        <div class="card-body">
+          <input type="color" id="colorPicker" value="#3B82F6">
+          <div class="color-code">
+            <div class="color-code-label">HEX</div>
+            <input type="text" id="colorCode" value="#3B82F6" maxlength="7" style="width: 100px; padding: 4px 8px; border: 1px solid #E5E7EB; border-radius: 4px; font-family: monospace; font-size: 14px; font-weight: 700; text-align: center; color: #1F2937;">
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="card-tip">💡 Primary: #3B82F6 / Success: #10B981</div>
+        </div>
+      </div>
+
+      <!-- Border Radius Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">ROUND</div>
+        </div>
+        <div class="card-body">
+          <div id="roundPreview"></div>
+          <input type="range" id="roundSlider" min="0" max="48" value="8">
+          <input type="number" id="roundInput" min="0" max="48" value="8" style="width: 80px; padding: 4px 8px; border: 1px solid #E5E7EB; border-radius: 4px; font-family: monospace; font-size: 14px; text-align: center;">
+        </div>
+        <div class="card-footer">
+          <div class="card-tip">💡 Card: 8 / 12 / 16 / Button: 4 / 8 / 24</div>
+        </div>
+      </div>
+
+      <!-- Pixel Size Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">PIXEL SIZE</div>
+        </div>
+        <div class="card-body">
+          <div style="width: 100%; display: flex; justify-content: center;">
+            <div id="spacingPreview" style="width: 16px;"></div>
+          </div>
+          <input type="range" id="spacingSlider" min="4" max="80" step="4" value="16">
+          <input type="number" id="spacingInput" min="0" max="80" value="16" style="width: 80px; padding: 4px 8px; border: 1px solid #E5E7EB; border-radius: 4px; font-family: monospace; font-size: 14px; text-align: center;">
+        </div>
+        <div class="card-footer">
+          <div class="card-tip">💡 8px Base: 8 / 16 / 24 / 32 / 48 / 64</div>
+        </div>
+      </div>
+
+      <!-- Shadow Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">SHADOW</div>
+        </div>
+        <div class="card-body">
+          <div id="shadowPreview"></div>
+          <div class="shadow-controls">
+            <div class="shadow-control">
+              <label>Y:</label>
+              <input type="range" id="shadowY" min="0" max="20" value="4">
+              <span id="shadowYValue">4</span>
+            </div>
+            <div class="shadow-control">
+              <label>Blur:</label>
+              <input type="range" id="shadowBlur" min="0" max="30" value="6">
+              <span id="shadowBlurValue">6</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="card-tip">💡 Card: 0 2px 8px / Modal: 0 10px 25px</div>
+        </div>
+      </div>
+
+      <!-- Line Width Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">LINE</div>
+        </div>
+        <div class="card-body">
+          <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <div style="width: 120px; background: #1F2937;" id="linePreview"></div>
+          </div>
+          <input type="range" id="lineSlider" min="1" max="10" value="2">
+          <input type="number" id="lineInput" min="0" max="20" value="2" style="width: 80px; padding: 4px 8px; border: 1px solid #E5E7EB; border-radius: 4px; font-family: monospace; font-size: 14px; text-align: center;">
+        </div>
+        <div class="card-footer">
+          <div class="card-tip">💡 Thin: 1 / Normal: 2 / Bold: 4-6</div>
+        </div>
+      </div>
+
+      <!-- Font Size Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">FONT</div>
+        </div>
+        <div class="card-body">
+          <div id="fontPreview" style="font-size: 16px; overflow: hidden; max-width: 100%; max-height: 120px;">Sample</div>
+          <input type="range" id="fontSlider" min="12" max="80" value="16">
+          <input type="number" id="fontInput" min="12" max="80" value="16" style="width: 80px; padding: 4px 8px; border: 1px solid #E5E7EB; border-radius: 4px; font-family: monospace; font-size: 14px; text-align: center;">
+        </div>
+        <div class="card-footer">
+          <div class="card-tip">💡 Body: 14-16 / H1: 32-48 / H2: 24-32</div>
+        </div>
+      </div>
+
+      <!-- Font Color Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">FONT COLOR</div>
+        </div>
+        <div class="card-body">
+          <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+            <div id="fontColorPreviewBold" style="font-size: 20px; font-weight: 700; color: #1F2937; text-align: center;">Bold</div>
+            <div id="fontColorPreviewLight" style="font-size: 20px; font-weight: 300; color: #1F2937; text-align: center;">Light</div>
+          </div>
+          <input type="color" id="fontColorPicker" value="#1F2937" style="width: 60px; height: 40px; border: 1px solid #E5E7EB; border-radius: 4px; cursor: pointer;">
+          <input type="text" id="fontColorCode" value="#1F2937" maxlength="7" style="width: 100px; padding: 4px 8px; border: 1px solid #E5E7EB; border-radius: 4px; font-family: monospace; font-size: 12px; text-align: center;">
+        </div>
+        <div class="card-footer">
+          <div class="card-tip">💡 Dark: #1F2937 / Gray: #6B7280</div>
+        </div>
+      </div>
+
+      <!-- Line Height Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">LINE SPACING</div>
+        </div>
+        <div class="card-body">
+          <div id="lineHeightPreview" style="line-height: 1.5; font-size: 12px; color: #6B7280; text-align: center; padding: 0 8px;">The quick brown fox jumps over the lazy dog</div>
+          <input type="range" id="lineHeightSlider" min="1" max="2" step="0.1" value="1.5">
+          <div class="value-display" id="lineHeightValue">1.5</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-tip">💡 Tight: 1.2 / Normal: 1.5 / Loose: 1.8</div>
+        </div>
+      </div>
+
+      <!-- Button Size Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">BUTTON</div>
+        </div>
+        <div class="card-body">
+          <div class="button-examples" style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
+            <!-- Tip size -->
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button class="btn-example" style="width: 24px; height: 24px; padding: 0; font-size: 10px; display: flex; align-items: center; justify-content: center;">T</button>
+              <button class="btn-example" style="flex: 1; height: 24px; padding: 0 8px; font-size: 10px;">Tip (24px)</button>
+            </div>
+            <!-- Small -->
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button class="btn-example" style="width: 32px; height: 32px; padding: 0; font-size: 12px; display: flex; align-items: center; justify-content: center;">S</button>
+              <button class="btn-example" style="flex: 1; height: 32px; padding: 0 12px; font-size: 12px;">Small (32px)</button>
+            </div>
+            <!-- Medium -->
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button class="btn-example" style="width: 40px; height: 40px; padding: 0; font-size: 14px; display: flex; align-items: center; justify-content: center;">M</button>
+              <button class="btn-example" style="flex: 1; height: 40px; padding: 0 16px; font-size: 14px;">Medium (40px)</button>
+            </div>
+            <!-- Large -->
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button class="btn-example" style="width: 48px; height: 48px; padding: 0; font-size: 16px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">L</button>
+              <button class="btn-example" style="flex: 1; height: 48px; padding: 0 20px; font-size: 16px; border-radius: 8px;">Large (48px)</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="card-tip">💡 Height: 24 / 32 / 40 / 48 / 56px</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ad Banner 1 -->
+<!-- 
+    <div class="ad-banner">
+      <span>Ad Space</span>
+    </div>
+ -->
+
+    <!-- Box Visualizer (PC Only) -->
+    <div class="box-visualizer">
+      <div class="box-visualizer-header">
+        <h2>Box Visualizer</h2>
+        <span class="box-visualizer-subtitle">Pixel + Margin + Padding</span>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls-grid">
+        <div class="control-group">
+          <div>
+            <label class="control-label">BOX SIZE</label>
+            <div class="input-row">
+              <div class="input-field">
+                <label>Width (max 800)</label>
+                <input type="number" id="boxWidth" min="0" max="800" value="400">
+              </div>
+              <div class="input-field">
+                <label>Height (max 400)</label>
+                <input type="number" id="boxHeight" min="0" max="400" value="200">
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="control-label">MARGIN (外側余白)</label>
+            <div class="input-row">
+              <div class="input-field">
+                <label>上下 (max 200)</label>
+                <input type="number" id="marginV" min="0" max="200" value="16">
+              </div>
+              <div class="input-field">
+                <label>左右 (max 200)</label>
+                <input type="number" id="marginH" min="0" max="200" value="24">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div>
+            <label class="control-label">PADDING (内側余白)</label>
+            <div class="input-row">
+              <div class="input-field">
+                <label>上下 (max 200)</label>
+                <input type="number" id="paddingV" min="0" max="200" value="12">
+              </div>
+              <div class="input-field">
+                <label>左右 (max 200)</label>
+                <input type="number" id="paddingH" min="0" max="200" value="16">
+              </div>
+            </div>
+          </div>
+
+          <div class="content-size-box">
+            <div class="content-size-label">CONTENT SIZE (計算結果)</div>
+            <div class="content-size-values">
+              <div><span>Width:</span> <span id="contentWidth">368px</span></div>
+              <div><span>Height:</span> <span id="contentHeight">176px</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Preview -->
+      <div class="visual-preview">
+        <div class="box-container" id="boxContainer">
+          <div class="margin-layer" id="marginLayer">
+            <div class="margin-label">Margin</div>
+            <div class="padding-layer" id="paddingLayer">
+              <div class="padding-label">Padding</div>
+              <div class="content-layer" id="contentLayer">
+                <div class="content-label">Content</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tips -->
+      <div class="box-tips">
+        <p>💡 <strong>よく使う値:</strong> 余白 8/16/24/32/48 | マージン(SP) 16〜24 / (PC) 40〜80 | パディング 上下12〜16 / 左右16〜24</p>
+      </div>
+    </div>
+
+    <!-- Ad Banner 2 -->
+<!-- 
+    <div class="ad-banner">
+      <span>Ad Space</span>
+    </div>
+ -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>Design Playground – あんちょこツール for デザイン作業</p>
+    </div>
+  </footer>
+
+  <script>
+    // Color Picker
+    const colorPicker = document.getElementById('colorPicker');
+    const colorCode = document.getElementById('colorCode');
+
+    colorPicker.addEventListener('input', (e) => {
+      colorCode.value = e.target.value.toUpperCase();
+    });
+
+    colorCode.addEventListener('input', (e) => {
+      let value = e.target.value;
+      // Ensure it starts with #
+      if (!value.startsWith('#')) {
+        value = '#' + value;
+      }
+      // Only update color picker if it's a valid hex color
+      if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+        colorPicker.value = value;
+      }
+      colorCode.value = value.toUpperCase();
+    });
+
+    // Border Radius
+    const roundSlider = document.getElementById('roundSlider');
+    const roundPreview = document.getElementById('roundPreview');
+    const roundInput = document.getElementById('roundInput');
+
+    function updateRound(value) {
+      const clampedValue = Math.min(48, Math.max(0, value));
+      roundPreview.style.borderRadius = `${clampedValue}px`;
+      roundSlider.value = clampedValue;
+      roundInput.value = clampedValue;
+    }
+
+    roundSlider.addEventListener('input', (e) => {
+      updateRound(e.target.value);
+    });
+
+    roundInput.addEventListener('input', (e) => {
+      updateRound(e.target.value);
+    });
+
+    // Pixel Size
+    const spacingSlider = document.getElementById('spacingSlider');
+    const spacingPreview = document.getElementById('spacingPreview');
+    const spacingInput = document.getElementById('spacingInput');
+
+    function updateSpacing(value) {
+      const clampedValue = Math.min(80, Math.max(0, value));
+      spacingPreview.style.width = `${clampedValue}px`;
+      spacingSlider.value = clampedValue;
+      spacingInput.value = clampedValue;
+    }
+
+    spacingSlider.addEventListener('input', (e) => {
+      updateSpacing(e.target.value);
+    });
+
+    spacingInput.addEventListener('input', (e) => {
+      updateSpacing(e.target.value);
+    });
+
+    // Shadow
+    const shadowY = document.getElementById('shadowY');
+    const shadowBlur = document.getElementById('shadowBlur');
+    const shadowPreview = document.getElementById('shadowPreview');
+    const shadowYValue = document.getElementById('shadowYValue');
+    const shadowBlurValue = document.getElementById('shadowBlurValue');
+
+    function updateShadow() {
+      const y = shadowY.value;
+      const blur = shadowBlur.value;
+      shadowPreview.style.boxShadow = `0 ${y}px ${blur}px 0 rgba(0,0,0,0.1)`;
+      shadowYValue.textContent = y;
+      shadowBlurValue.textContent = blur;
+    }
+
+    shadowY.addEventListener('input', updateShadow);
+    shadowBlur.addEventListener('input', updateShadow);
+
+    // Line Width
+    const lineSlider = document.getElementById('lineSlider');
+    const linePreview = document.getElementById('linePreview');
+    const lineInput = document.getElementById('lineInput');
+
+    function updateLineWidth(value) {
+      const clampedValue = Math.min(20, Math.max(0, value));
+      linePreview.style.height = `${clampedValue}px`;
+      lineSlider.value = clampedValue;
+      lineInput.value = clampedValue;
+    }
+
+    lineSlider.addEventListener('input', (e) => {
+      updateLineWidth(e.target.value);
+    });
+
+    lineInput.addEventListener('input', (e) => {
+      updateLineWidth(e.target.value);
+    });
+
+    // Initialize line width
+    updateLineWidth(2);
+
+    // Font Size
+    const fontSlider = document.getElementById('fontSlider');
+    const fontPreview = document.getElementById('fontPreview');
+    const fontInput = document.getElementById('fontInput');
+
+    function updateFont(value) {
+      const clampedValue = Math.min(80, Math.max(12, value));
+      fontPreview.style.fontSize = `${clampedValue}px`;
+      fontSlider.value = clampedValue;
+      fontInput.value = clampedValue;
+    }
+
+    fontSlider.addEventListener('input', (e) => {
+      updateFont(e.target.value);
+    });
+
+    fontInput.addEventListener('input', (e) => {
+      updateFont(e.target.value);
+    });
+
+    // Font Color
+    const fontColorPicker = document.getElementById('fontColorPicker');
+    const fontColorCode = document.getElementById('fontColorCode');
+    const fontColorPreviewBold = document.getElementById('fontColorPreviewBold');
+    const fontColorPreviewLight = document.getElementById('fontColorPreviewLight');
+
+    fontColorPicker.addEventListener('input', (e) => {
+      const color = e.target.value.toUpperCase();
+      fontColorCode.value = color;
+      fontColorPreviewBold.style.color = color;
+      fontColorPreviewLight.style.color = color;
+    });
+
+    fontColorCode.addEventListener('input', (e) => {
+      let value = e.target.value;
+      if (!value.startsWith('#')) {
+        value = '#' + value;
+      }
+      if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+        fontColorPicker.value = value;
+        fontColorPreviewBold.style.color = value;
+        fontColorPreviewLight.style.color = value;
+      }
+      fontColorCode.value = value.toUpperCase();
+    });
+
+    // Line Height (Line Spacing)
+    const lineHeightSlider = document.getElementById('lineHeightSlider');
+    const lineHeightPreview = document.getElementById('lineHeightPreview');
+    const lineHeightValue = document.getElementById('lineHeightValue');
+
+    lineHeightSlider.addEventListener('input', (e) => {
+      const value = parseFloat(e.target.value);
+      lineHeightPreview.style.lineHeight = value;
+      lineHeightValue.textContent = value.toFixed(1);
+    });
+
+    // Box Visualizer
+    const boxWidth = document.getElementById('boxWidth');
+    const boxHeight = document.getElementById('boxHeight');
+    const marginV = document.getElementById('marginV');
+    const marginH = document.getElementById('marginH');
+    const paddingV = document.getElementById('paddingV');
+    const paddingH = document.getElementById('paddingH');
+    const contentWidth = document.getElementById('contentWidth');
+    const contentHeight = document.getElementById('contentHeight');
+    const marginLayer = document.getElementById('marginLayer');
+    const paddingLayer = document.getElementById('paddingLayer');
+    const contentLayer = document.getElementById('contentLayer');
+
+    function updateBoxVisualizer() {
+      const w = parseInt(boxWidth.value) || 0;
+      const h = parseInt(boxHeight.value) || 0;
+      const mv = parseInt(marginV.value) || 0;
+      const mh = parseInt(marginH.value) || 0;
+      const pv = parseInt(paddingV.value) || 0;
+      const ph = parseInt(paddingH.value) || 0;
+
+      // Enforce max values
+      boxWidth.value = Math.min(800, Math.max(0, w));
+      boxHeight.value = Math.min(400, Math.max(0, h));
+      marginV.value = Math.min(200, Math.max(0, mv));
+      marginH.value = Math.min(200, Math.max(0, mh));
+      paddingV.value = Math.min(200, Math.max(0, pv));
+      paddingH.value = Math.min(200, Math.max(0, ph));
+
+      const finalW = parseInt(boxWidth.value);
+      const finalH = parseInt(boxHeight.value);
+      const finalMv = parseInt(marginV.value);
+      const finalMh = parseInt(marginH.value);
+      const finalPv = parseInt(paddingV.value);
+      const finalPh = parseInt(paddingH.value);
+
+      const cw = Math.max(0, finalW - (finalPh * 2));
+      const ch = Math.max(0, finalH - (finalPv * 2));
+
+      // Update content size display
+      contentWidth.textContent = `${cw}px`;
+      contentHeight.textContent = `${ch}px`;
+
+      // Update visual layers
+      marginLayer.style.width = `${finalW + (finalMh * 2)}px`;
+      marginLayer.style.height = `${finalH + (finalMv * 2)}px`;
+
+      paddingLayer.style.width = `${finalW}px`;
+      paddingLayer.style.height = `${finalH}px`;
+
+      contentLayer.style.width = `${cw}px`;
+      contentLayer.style.height = `${ch}px`;
+    }
+
+    boxWidth.addEventListener('input', updateBoxVisualizer);
+    boxHeight.addEventListener('input', updateBoxVisualizer);
+    marginV.addEventListener('input', updateBoxVisualizer);
+    marginH.addEventListener('input', updateBoxVisualizer);
+    paddingV.addEventListener('input', updateBoxVisualizer);
+    paddingH.addEventListener('input', updateBoxVisualizer);
+
+    // Initialize
+    updateShadow();
+    updateBoxVisualizer();
+  </script>
+</body>
+</html>
